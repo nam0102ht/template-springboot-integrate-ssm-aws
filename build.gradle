@@ -1,0 +1,69 @@
+import java.time.Duration
+
+plugins {
+    id "com.avast.gradle.docker-compose" version "0.16.8"
+    id 'org.springframework.boot' version '3.0.4'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'jacoco'
+    id 'java'
+}
+
+group 'com.ntnn'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    implementation 'com.amazonaws:aws-java-sdk:1.12.423'
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    implementation 'org.postgresql:postgresql:42.5.4'
+    implementation 'org.json:json:20220924'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+
+dockerCompose {
+    useComposeFiles = ["src/main/docker/docker-compose.yml"]
+    dockerComposeStopTimeout = Duration.ofSeconds(120)
+}
+
+task startTestEnvironment {
+    dependsOn += ["composeUp"]
+}
+
+task stopTestEnvironment {
+    dependsOn += ["composeDown"]
+}
+
+test {
+    include 'unit/**'
+    useJUnitPlatform()
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.2
+            }
+        }
+    }
+}

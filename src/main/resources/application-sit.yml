@@ -1,0 +1,16 @@
+infrastructure:
+  services:
+    aws:
+      region: ap-southeast-1
+      proxy:
+        host:
+        port:
+      params:
+        mq:
+          - username: /com/ntnn/mq/username
+            password: /com/ntnn/mq/password
+            hostname: /com/ntnn/mq/hostname
+        database:
+          - username: /com/ntnn/database/username
+            password: /com/ntnn/database/password
+            hostname: /com/ntnn/database/hostname

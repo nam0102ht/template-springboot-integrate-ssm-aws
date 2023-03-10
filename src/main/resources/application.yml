@@ -1,0 +1,46 @@
+server:
+  port: 8000
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+
+infrastructure:
+  services:
+    aws:
+      region: ap-southeast-1
+      proxy:
+        host:
+        port:
+      params:
+        mq:
+          - username: /com/ntnn/mq/username
+            password: /com/ntnn/mq/password
+            hostname: /com/ntnn/mq/hostname
+        database:
+          - username: /com/ntnn/database/username
+            password: /com/ntnn/database/password
+            hostname: /com/ntnn/database/hostname
+    rabbitmq:
+      port: 5672
+      topicExchange:
+        - account-exchange
+        - payment-exchange
+      queues:
+        - account
+        - payment
+      incomingQueue: account
+      autoAck: true
+      receiveTimeOut: 11000
+      concurrent-min: 4
+      concurrent-max: 5
+
+logging:
+  exclusions: /keep-alive

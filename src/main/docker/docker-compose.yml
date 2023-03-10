@@ -1,0 +1,27 @@
+version: "3.2"
+
+services:
+  db:
+    image: postgres
+    container_name: "postgres"
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: root
+    restart: unless-stopped
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    networks:
+      - rabbitmq
+    restart: unless-stopped
+
+networks:
+  rabbitmq:
+    driver: bridge
