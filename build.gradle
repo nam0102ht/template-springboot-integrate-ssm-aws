@@ -58,6 +58,11 @@ test {
     useJUnitPlatform()
 }
 
+task componentTest(type: Test, dependsOn: ['testClasses']) {
+    include 'component/**'
+    useJUnitPlatform()
+}
+
 jacocoTestCoverageVerification {
     violationRules {
         rule {
