@@ -2,6 +2,9 @@ package com.ntnn.config.strategy;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ntnn.entity.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -15,10 +18,15 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 @Component
 @Profile({"!dev & !test & !local"})
-@RequiredArgsConstructor
 public class CloudParameterAwsImpl implements CloudParameterStore {
     private final AWSSimpleSystemsManagement awsParamStore;
     private final Params params;
+
+    public CloudParameterAwsImpl(AWSSimpleSystemsManagement awsParamStore, Params params) {
+        this.awsParamStore = awsParamStore;
+        this.params = params;
+        log.info("Project is getting from profile dev with values get from CloudParameterAwsImpl");
+    }
 
     @Override
     public Params authorMq() {
@@ -58,6 +66,7 @@ public class CloudParameterAwsImpl implements CloudParameterStore {
         } catch (ExecutionException | InterruptedException ex) {
             log.error("Error with='{}'", ex.getMessage(), ex);
         }
+        log.info("Parameters of mq: {}", parseObjectToString(auth));
         return auth;
     }
 
@@ -96,6 +105,16 @@ public class CloudParameterAwsImpl implements CloudParameterStore {
             log.error("Error with='{}'", ex.getMessage(), ex);
         }
         paramsNew.setDatabase(authList);
+        log.info("Parameters of datase: {}", parseObjectToString(paramsNew));
         return paramsNew;
+    }
+    private String parseObjectToString(Object account) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(account);
+        } catch (JsonProcessingException e) {
+            log.error("Error='{}'", e.getMessage(), e);
+            return "";
+        }
     }
 }
