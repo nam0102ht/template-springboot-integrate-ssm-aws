@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.json:json:20220924'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core:5.2.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -62,6 +63,7 @@ task componentTest(type: Test, dependsOn: ['testClasses']) {
     include 'component/**'
     useJUnitPlatform()
 }
+
 
 jacocoTestCoverageVerification {
     violationRules {

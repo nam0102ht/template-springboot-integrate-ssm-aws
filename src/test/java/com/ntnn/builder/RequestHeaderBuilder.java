@@ -1,4 +1,4 @@
-package component.com.ntnn.builder;
+package com.ntnn.builder;
 
 import lombok.Builder;
 import org.springframework.http.HttpHeaders;
